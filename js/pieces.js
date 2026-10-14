@@ -2,73 +2,116 @@
 // Edit this file to update the site. No build step needed.
 //
 // To add a piece:
-//   1. Put its photo(s) in assets/pieces/  (JPG/WebP, ~1600px wide)
+//   1. Put its photo in assets/works/  (JPG/WebP, ideally 1600px+)
 //   2. Copy one block in PIECES below and change the fields.
+//      wide: true  → spans two columns (use for landscape photos)
+//      position    → optional CSS object-position to frame the crop
 // ─────────────────────────────────────────────────────────────
 
 const SITE = {
-  name: "Aurelle",
-  eyebrow: "Handcrafted fine jewelry",
-  headline: "Made by hand.<br>Made to be kept.",
-  tagline: "Each piece is designed and finished in a small studio, one at a time.",
+  name: "Ronen Peretz",
+  eyebrow: "Personal Jeweler · Q.S.P",
+  headline: "Quality. Service.<br>Price.",
+  tagline:
+    "Engagement rings, custom design, repairs and jewelry restoration — made to order, one client at a time.",
   about:
-    "Write the jeweler's story here — how they started, the materials they love, and what makes their work different.",
+    "Ronen Peretz is a personal jeweler and designer. He designs pieces around each client's choices, specializes in engagement rings, and restores and repairs the jewelry you already love.",
   contact: {
     // Leave a value empty ("") to hide that button.
-    whatsapp: "972500000000", // international format, digits only
-    instagram: "your.handle",
-    email: "hello@example.com",
+    whatsapp: "972543978447", // international format, digits only
+    phone: "054-397-8447",
+    instagram: "ronen.jewelry",
+    email: "",
   },
 };
 
 const PIECES = [
   {
-    id: "solace-ring",
-    title: "Solace Ring",
-    category: "Rings",
-    images: ["assets/pieces/ring.svg"],
-    description: "A slim band in recycled 14k gold, set with a single bezel-cut stone.",
-    specs: { Metal: "14k recycled gold", Stone: "White sapphire, 3mm", Made: "To order, 2–3 weeks" },
-    featured: true,
+    id: "vintage-milgrain-band",
+    title: "Vintage Milgrain Band",
+    category: "Bands",
+    images: ["assets/works/06-DF5pOV3tC48.jpg"],
+    description: "A yellow-gold band of open loops with milgrain edges, set with round diamonds all the way around.",
+    instagram: "https://www.instagram.com/reel/DF5pOV3tC48/",
+    wide: true,
   },
   {
-    id: "drift-necklace",
-    title: "Drift Necklace",
-    category: "Necklaces",
-    images: ["assets/pieces/necklace.svg"],
-    description: "A fine chain with a hand-hammered pendant that catches the light as it moves.",
-    specs: { Metal: "Sterling silver", Length: "42–45 cm adjustable", Made: "Ready to ship" },
+    id: "emerald-pave-ring",
+    title: "Emerald Pavé Ring",
+    category: "Engagement",
+    images: ["assets/works/01-DVHIDovCPga.jpg"],
+    description: "An emerald-cut green stone in a yellow-gold setting, with pavé diamonds wrapping the band and gallery.",
+    instagram: "https://www.instagram.com/reel/DVHIDovCPga/",
+    position: "50% 70%",
   },
   {
-    id: "tide-earrings",
-    title: "Tide Earrings",
-    category: "Earrings",
-    images: ["assets/pieces/earrings.svg"],
-    description: "Asymmetric drops with freshwater pearls.",
-    specs: { Metal: "14k gold-fill", Stone: "Freshwater pearl", Made: "Ready to ship" },
+    id: "pear-diamond-ring",
+    title: "Pear Diamond Ring",
+    category: "Engagement",
+    images: ["assets/works/02-DS5poUFiGto.jpg"],
+    description: "A large pear-shaped diamond on a split, pavé-set white-gold band.",
+    instagram: "https://www.instagram.com/reel/DS5poUFiGto/",
+    position: "50% 60%",
   },
   {
-    id: "orbit-bracelet",
-    title: "Orbit Bracelet",
-    category: "Bracelets",
-    images: ["assets/pieces/bracelet.svg"],
-    description: "An open cuff with a brushed finish, shaped by hand to sit close to the wrist.",
-    specs: { Metal: "Sterling silver", Size: "S / M / L", Made: "To order, 1–2 weeks" },
+    id: "sapphire-baguette-ring",
+    title: "Sapphire Baguette Ring",
+    category: "Statement",
+    images: ["assets/works/03-DSzKWABiNU9.jpg"],
+    description: "A sculptural cocktail ring of blue sapphire baguettes and diamonds in white gold.",
+    instagram: "https://www.instagram.com/reel/DSzKWABiNU9/",
   },
   {
-    id: "halo-ring",
-    title: "Halo Ring",
-    category: "Rings",
-    images: ["assets/pieces/ring-2.svg"],
-    description: "A statement ring with a cluster of small stones around a central gem.",
-    specs: { Metal: "18k gold", Stone: "Lab-grown diamonds", Made: "Commission only" },
+    id: "pear-cluster-ring",
+    title: "Pear Cluster Ring",
+    category: "Statement",
+    images: ["assets/works/12-CuQdp5FICre.jpg"],
+    description: "An open bypass ring with clusters of pear-cut diamonds arranged like leaves.",
+    instagram: "https://www.instagram.com/reel/CuQdp5FICre/",
+    wide: true,
   },
   {
-    id: "lune-necklace",
-    title: "Lune Necklace",
-    category: "Necklaces",
-    images: ["assets/pieces/necklace-2.svg"],
-    description: "A crescent pendant on a delicate cable chain.",
-    specs: { Metal: "14k gold-fill", Length: "40 cm", Made: "Ready to ship" },
+    id: "diamond-link-ring",
+    title: "Diamond Link Ring",
+    category: "Bands",
+    images: ["assets/works/05-DF53ru6NADz.jpg"],
+    description: "Paperclip links in yellow gold, each one lined with diamonds.",
+    instagram: "https://www.instagram.com/reel/DF53ru6NADz/",
+  },
+  {
+    id: "three-stone-ring",
+    title: "Three-Stone Ring",
+    category: "Engagement",
+    images: ["assets/works/04-DSu2fweiOTe.jpg"],
+    description: "A champagne center stone flanked by two yellow accent stones on a fine band.",
+    instagram: "https://www.instagram.com/reel/DSu2fweiOTe/",
+    wide: true,
+  },
+  {
+    id: "pear-solitaire",
+    title: "Pear Solitaire",
+    category: "Engagement",
+    images: ["assets/works/07-Cw0KGsWMS2d.jpg"],
+    description: "A classic pear-cut diamond solitaire on a slim, tapered white-gold band.",
+    instagram: "https://www.instagram.com/reel/Cw0KGsWMS2d/",
+    wide: true,
+  },
+  {
+    id: "diamond-eternity-band",
+    title: "Diamond Eternity Band",
+    category: "Bands",
+    images: ["assets/works/08-Cw0Jp7IsxN7.jpg"],
+    description: "Round diamonds set shoulder to shoulder all the way around.",
+    instagram: "https://www.instagram.com/reel/Cw0Jp7IsxN7/",
+    wide: true,
+  },
+  {
+    id: "engraved-bracelet",
+    title: "Engraved Macramé Bracelet",
+    category: "Personalized",
+    images: ["assets/works/10-CuQd5zcI4L_.jpg"],
+    description: "A hand-knotted cord bracelet with a rose-gold bar, engraved with a name and date.",
+    instagram: "https://www.instagram.com/reel/CuQd5zcI4L_/",
+    wide: true,
   },
 ];

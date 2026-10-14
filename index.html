@@ -3,10 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Aurelle Jewelry</title>
-  <meta name="description" content="Handcrafted fine jewelry — rings, necklaces, earrings and bracelets." />
-  <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+  <title>Ronen Peretz · Personal Jeweler</title>
+  <meta name="description" content="Ronen Peretz — personal jeweler and designer. Engagement rings, custom design, repairs and restoration." />
+  <meta name="theme-color" content="#000000" />
+  <meta property="og:title" content="Ronen Peretz · Personal Jeweler" />
+  <meta property="og:description" content="Engagement rings, custom design, repairs and restoration." />
+  <meta property="og:image" content="assets/works/01-DVHIDovCPga.jpg" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
@@ -15,62 +17,62 @@
   <div class="backdrop" aria-hidden="true">
     <span class="orb orb-1"></span>
     <span class="orb orb-2"></span>
-    <span class="orb orb-3"></span>
   </div>
 
   <header class="nav glass">
-    <a href="#top" class="brand" data-site="name">Aurelle</a>
+    <a href="#top" class="brand"><span class="mono">RP</span><span data-site="name">Ronen Peretz</span></a>
     <nav class="nav-links">
-      <a href="#collection">Collection</a>
-      <a href="#about">About</a>
+      <a href="#work">Work</a>
+      <a href="#services">Services</a>
       <a href="#contact" class="pill">Contact</a>
     </nav>
   </header>
 
   <main id="top">
     <section class="hero">
-      <p class="eyebrow" data-site="eyebrow">Handcrafted fine jewelry</p>
-      <h1 data-site="headline">Made by hand.<br />Made to be kept.</h1>
-      <p class="lede" data-site="tagline">Each piece is designed and finished in a small studio, one at a time.</p>
+      <p class="eyebrow" data-site="eyebrow">Personal Jeweler</p>
+      <h1 data-site="headline">Quality. Service.<br />Price.</h1>
+      <p class="lede" data-site="tagline"></p>
       <div class="hero-actions">
-        <a href="#collection" class="btn btn-primary">View the collection</a>
-        <a href="#contact" class="btn glass">Commission a piece</a>
+        <a href="#work" class="btn btn-primary">See the work</a>
+        <a href="#contact" class="btn glass">Design your ring</a>
       </div>
     </section>
 
-    <section id="collection" class="section">
+    <section id="work" class="section">
       <div class="section-head">
-        <h2>Collection</h2>
+        <h2>Work</h2>
         <div class="segmented glass" role="tablist" aria-label="Filter by category" id="filters"></div>
       </div>
       <div class="grid" id="grid"></div>
     </section>
 
-    <section id="about" class="section">
+    <section id="services" class="section">
       <div class="about glass">
         <div class="about-text">
-          <h2>About the studio</h2>
-          <p data-site="about">Write the jeweler's story here — how they started, the materials they love, and what makes their work different.</p>
+          <h2>A jeweler of your own</h2>
+          <p data-site="about"></p>
         </div>
         <ul class="facts">
-          <li><strong>Recycled</strong><span>gold &amp; silver</span></li>
-          <li><strong>Ethical</strong><span>stones</span></li>
-          <li><strong>One-off</strong><span>&amp; custom pieces</span></li>
+          <li><strong>Engagement rings</strong><span>His specialty</span></li>
+          <li><strong>Custom design</strong><span>Built around your choices</span></li>
+          <li><strong>Repairs</strong><span>Fixes, resizing, re-setting</span></li>
+          <li><strong>Restoration</strong><span>Old pieces, made new</span></li>
         </ul>
       </div>
     </section>
 
     <section id="contact" class="section">
       <div class="contact glass">
-        <h2>Let's make something</h2>
-        <p>For orders, custom work, or to see a piece in person — get in touch.</p>
+        <h2>Let's design something</h2>
+        <p>Tell Ronen what you have in mind, or bring a piece that needs care.</p>
         <div class="contact-links" id="contact-links"></div>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <p>© <span id="year"></span> <span data-site="name">Aurelle</span>. All rights reserved.</p>
+    <p>© <span id="year"></span> <span data-site="name">Ronen Peretz</span> · Personal Jeweler</p>
   </footer>
 
   <!-- Piece detail sheet -->
@@ -86,8 +88,10 @@
       <p class="eyebrow" id="sheet-cat"></p>
       <h3 id="sheet-title"></h3>
       <p id="sheet-desc"></p>
-      <dl class="specs" id="sheet-specs"></dl>
-      <a class="btn btn-primary" id="sheet-cta" target="_blank" rel="noopener">Ask about this piece</a>
+      <div class="sheet-actions">
+        <a class="btn btn-primary" id="sheet-cta" target="_blank" rel="noopener">Ask about this piece</a>
+        <a class="btn glass" id="sheet-ig" target="_blank" rel="noopener">Watch the video</a>
+      </div>
     </div>
   </dialog>
 
