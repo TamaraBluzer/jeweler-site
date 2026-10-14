@@ -18,3 +18,6 @@ Then open http://localhost:4173
 
 ## Deploy (GitHub Pages)
 Repo → Settings → Pages → Source: *Deploy from a branch* → `main` / root.
+
+## After editing
+Bump the `?v=` number on the CSS/JS links in `index.html` (e.g. `?v=3` → `?v=4`) so visitors' browsers fetch the new files instead of a cached copy.
