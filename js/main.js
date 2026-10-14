@@ -28,6 +28,12 @@
     )
     .join("");
 
+  if (whatsapp) {
+    const fab = $("#wa-fab");
+    fab.href = waLink("Hi Ronen! I found you through your website.");
+    fab.hidden = false;
+  }
+
   // ── Filters ──────────────────────────────────────────────
   const categories = ["All", ...new Set(PIECES.map((p) => p.category))];
   let active = "All";
