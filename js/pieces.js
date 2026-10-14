@@ -10,12 +10,12 @@
 
 const SITE = {
   name: "Ronen Peretz",
-  eyebrow: "Personal Jeweler · Q.S.P",
-  headline: "Quality. Service.<br>Price.",
+  eyebrow: "Personal Jeweler · Fine Jewelry",
+  headline: "Fine jewelry,<br>made for a lifetime.",
   tagline:
-    "Engagement rings, custom design, repairs and jewelry restoration — made to order, one client at a time.",
+    "Bespoke engagement rings and one-of-a-kind pieces, designed with you and crafted to the highest standard.",
   about:
-    "Ronen Peretz is a personal jeweler and designer. He designs pieces around each client's choices, specializes in engagement rings, and restores and repairs the jewelry you already love.",
+    "Ronen Peretz brings years of experience at the bench to every piece. He works personally with each client — from the first sketch to the final stone — creating bespoke engagement rings, fine jewelry commissions, and expert restorations of heirloom pieces.",
   contact: {
     // Leave a value empty ("") to hide that button.
     whatsapp: "972543978447", // international format, digits only
