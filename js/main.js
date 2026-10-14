@@ -56,8 +56,8 @@
     grid.innerHTML = items
       .map(
         (p, i) => `
-        <button class="card glass${p.wide ? " wide" : ""}" data-id="${p.id}" style="--i:${i}">
-          <div class="card-media"><img src="${p.images[0]}" alt="${p.title}" loading="lazy"${
+        <button class="card glass${p.wide ? " wide" : ""}" data-id="${p.id}" title="${p.title}" style="--i:${i}">
+          <div class="card-media"><img src="${p.images[0]}" alt="${p.title}" loading="lazy" onerror="this.classList.add('missing')"${
             p.position ? ` style="object-position:${p.position}"` : ""
           } /></div>
           <div class="card-label">
@@ -110,37 +110,42 @@
     ig.href = p.instagram || "";
     ig.hidden = !p.instagram;
 
-    running?.cancel();
-    sheet.showModal();
+    if (!sheet.open) sheet.showModal();
     history.replaceState(null, "", `#${p.id}`);
-    if (reduceMotion.matches) return;
+    animateSheet(true);
+  }
+
+  // Materialize: scale + blur + opacity together, so the glass reads as arriving.
+  const SHOWN = { opacity: 1, transform: "scale(1)", filter: "blur(0px)" };
+  const HIDDEN = { opacity: 0, transform: "scale(0.6)", filter: "blur(4px)" };
+
+  // Grows out of the clicked card on open, shrinks back into it on close.
+  // Interruptible: always starts from the current on-screen state. Reduced motion: opacity only.
+  function animateSheet(opening) {
+    const reduce = reduceMotion.matches;
+    let from = null;
+    if (running?.playState === "running") {
+      const cs = getComputedStyle(sheet);
+      from = reduce ? { opacity: cs.opacity } : { opacity: cs.opacity, transform: cs.transform, filter: cs.filter };
+    }
+    running?.cancel(); // measure the untransformed sheet
     sheet.style.transformOrigin = originFrom(sourceCard);
-    // Materialize: scale + blur + opacity together, so the glass reads as arriving.
-    running = sheet.animate(
-      [
-        { opacity: 0, transform: "scale(0.6)", filter: "blur(12px)" },
-        { opacity: 1, transform: "scale(1)", filter: "blur(0)" },
-      ],
-      { duration: 380, easing: EASE_OUT }
-    );
+    const shown = reduce ? { opacity: 1 } : SHOWN;
+    const hidden = reduce ? { opacity: 0 } : HIDDEN;
+    const anim = sheet.animate([from || (opening ? hidden : shown), opening ? shown : hidden], {
+      duration: opening ? (reduce ? 150 : 380) : reduce ? 120 : 220, // exit snaps faster than entry
+      easing: EASE_OUT,
+      fill: "forwards",
+    });
+    anim.onfinish = () => {
+      if (!opening) sheet.close();
+      anim.cancel(); // drop the fill so no leftover filter/transform sits on the glass
+    };
+    running = anim;
   }
 
   function closeSheet() {
-    if (!sheet.open) return;
-    if (reduceMotion.matches) return sheet.close();
-    running?.cancel(); // measure the untransformed sheet
-    sheet.style.transformOrigin = originFrom(sourceCard);
-    running = sheet.animate(
-      [
-        { opacity: 1, transform: "scale(1)", filter: "blur(0)" },
-        { opacity: 0, transform: "scale(0.6)", filter: "blur(12px)" },
-      ],
-      { duration: 220, easing: EASE_OUT, fill: "forwards" }
-    );
-    running.onfinish = () => {
-      sheet.close();
-      running.cancel();
-    };
+    if (sheet.open) animateSheet(false);
   }
 
   $("#sheet-thumbs").addEventListener("click", (e) => {
