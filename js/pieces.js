@@ -7,6 +7,7 @@
 //      wide: true  → spans two columns (use for landscape photos)
 //      position    → optional CSS object-position to frame the crop
 //      date        → month it was made or posted, shown as "MM.YYYY"
+//      cutout      → optional transparent PNG of the piece, used if it is the hero
 // ─────────────────────────────────────────────────────────────
 
 const SITE = {
@@ -43,6 +44,7 @@ const PIECES = [
     title: "Emerald Pavé Ring",
     category: "Engagement",
     images: ["assets/works/01-DVHIDovCPga.jpg"],
+    cutout: "assets/works/01-emerald-cutout.png", // ring without its black background, used on the front page
     description: "An emerald-cut green stone in a yellow-gold setting, with pavé diamonds wrapping the band and gallery.",
     instagram: "https://www.instagram.com/reel/DVHIDovCPga/",
     date: "02.2026",

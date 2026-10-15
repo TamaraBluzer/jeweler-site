@@ -45,9 +45,10 @@
 
   // ── Hero piece ───────────────────────────────────────────
   const hero = PIECES.find((p) => p.id === SITE.hero) || PIECES[0];
-  $("#hero-img").src = hero.images[0];
+  $("#hero-img").src = hero.cutout || hero.images[0];
   $("#hero-img").alt = hero.title;
-  if (hero.position) $("#hero-img").style.objectPosition = hero.position;
+  $("#hero-open").classList.toggle("is-cutout", Boolean(hero.cutout));
+  if (hero.position && !hero.cutout) $("#hero-img").style.objectPosition = hero.position;
   $("#hero-open").setAttribute("aria-label", `View ${hero.title}`);
   $("#hero-caption").textContent = hero.title;
   $("#hero-meta").textContent = meta(hero);

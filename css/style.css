@@ -75,7 +75,8 @@ button { font: inherit; color: inherit; }
   transition: background-color 300ms ease;
 }
 .nav.scrolled { background: rgba(243, 238, 230, 0.82); }
-.mark { font: 500 22px/1 var(--serif); letter-spacing: 0.06em; color: var(--gold); }
+.mark { display: block; margin: -4px 0; }
+.mark img { height: 42px; width: auto; }
 .nav-links { display: flex; gap: 6px; color: var(--soft); }
 .nav-links a { padding: 8px 10px; transition: color 150ms ease; }
 .nav-links a:hover { color: var(--ink); }
@@ -103,7 +104,25 @@ button { font: inherit; color: inherit; }
 .hero h1 em { color: var(--gold); }
 .lede { font-size: 21px; line-height: 1.5; color: var(--soft); max-width: 32ch; margin: 30px 0 36px; }
 .hero-open { display: block; width: 100%; padding: 0; border: 0; background: var(--bg-deep); cursor: zoom-in; }
-.hero-open img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 70%; }
+.hero-open .hero-ring { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 70%; }
+.hero-logo { display: none; }
+/* Cut-out version: his logo above the ring, straight on the paper, like the original photo without the black */
+.hero-open.is-cutout {
+  background: none;
+  aspect-ratio: 4 / 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8%;
+}
+.hero-open.is-cutout .hero-logo { display: block; width: 44%; height: auto; }
+.hero-open.is-cutout .hero-ring {
+  width: 92%;
+  aspect-ratio: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 26px 22px rgba(70, 45, 10, 0.18)); /* grounds the ring on the page */
+}
 
 figcaption, .card-label {
   display: flex;
