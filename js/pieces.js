@@ -18,7 +18,7 @@ const SITE = {
     "Engagement rings and fine jewelry, designed with you and made to order. Ronen also restores the jewelry you already love.",
   about:
     "Ronen Peretz is a personal jeweler. He designs each piece around the client's own choices, and engagement rings are his specialty. He also restores old jewelry and looks after the pieces people wear every day.",
-  hero: "emerald-pave-ring", // the piece shown large on the front page
+  hero: "sapphire-baguette-ring", // the piece shown large on the front page
   contact: {
     // Leave a value empty ("") to hide that button.
     whatsapp: "972543978447", // international format, digits only
@@ -44,7 +44,6 @@ const PIECES = [
     title: "Emerald Pavé Ring",
     category: "Engagement",
     images: ["assets/works/01-DVHIDovCPga.jpg"],
-    cutout: "assets/works/01-emerald-cutout.png", // ring without its black background, used on the front page
     description: "An emerald-cut green stone in a yellow-gold setting, with pavé diamonds wrapping the band and gallery.",
     instagram: "https://www.instagram.com/reel/DVHIDovCPga/",
     date: "02.2026",
@@ -65,6 +64,7 @@ const PIECES = [
     title: "Sapphire Baguette Ring",
     category: "Statement",
     images: ["assets/works/03-DSzKWABiNU9.jpg"],
+    cutout: "assets/works/03-sapphire-cutout.png", // ring without its background, used on the front page
     description: "A sculptural cocktail ring of blue sapphire baguettes and diamonds in white gold.",
     instagram: "https://www.instagram.com/reel/DSzKWABiNU9/",
     date: "12.2025",

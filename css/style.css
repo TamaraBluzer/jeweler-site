@@ -118,7 +118,7 @@ button { font: inherit; color: inherit; }
 }
 .hero-open.is-cutout .hero-logo { display: block; width: 44%; height: auto; }
 .hero-open.is-cutout .hero-ring {
-  width: 92%;
+  width: 72%; /* kept below full width: the source photo is small, so don't stretch it */
   aspect-ratio: auto;
   object-fit: contain;
   filter: drop-shadow(0 26px 22px rgba(70, 45, 10, 0.18)); /* grounds the ring on the page */
