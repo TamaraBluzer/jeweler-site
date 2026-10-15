@@ -1,10 +1,10 @@
 # Ronen Peretz — Personal Jeweler
 
-A static portfolio site in Apple's "liquid glass" style. No build step: plain HTML, CSS and JS.
+A static portfolio site in a light, editorial "atelier" style (with a liquid-glass nav). No build step: plain HTML, CSS and JS.
 
 ## Edit content
 Everything you'll normally change is in **`js/pieces.js`**:
-- `SITE`: studio name, headline, about text, contact (WhatsApp / Instagram / email)
+- `SITE`: studio name, headline, about text, the `hero` piece shown large on the front page, contact (WhatsApp / phone / Instagram / email)
 - `PIECES`: one block per piece. Put photos in `assets/works/` and reference them in `images`.
   Set `wide: true` for landscape photos (spans two columns).
 

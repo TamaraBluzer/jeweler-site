@@ -2,6 +2,10 @@
   const $ = (sel) => document.querySelector(sel);
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
+  // Catalogue number, fixed by position in PIECES so it stays the same under any filter
+  const no = (p) => `No. ${String(PIECES.indexOf(p) + 1).padStart(2, "0")}`;
+  const meta = (p) => [no(p), p.date].filter(Boolean).join(" · ");
+
   // ── Site text from pieces.js ─────────────────────────────
   document.querySelectorAll("[data-site]").forEach((el) => {
     const value = SITE[el.dataset.site];
@@ -9,23 +13,28 @@
   });
   $("#year").textContent = new Date().getFullYear();
 
-  // ── Contact links ────────────────────────────────────────
+  // ── Contact ──────────────────────────────────────────────
   const { whatsapp, phone, instagram, email } = SITE.contact;
   const waLink = (text) =>
     `https://wa.me/${whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
-  const contactLinks = [
-    whatsapp && { label: "WhatsApp", href: waLink(), primary: true, external: true },
-    phone && { label: `Call ${phone}`, href: `tel:${phone.replace(/\D/g, "")}` },
-    instagram && { label: "Instagram", href: `https://instagram.com/${instagram}`, external: true },
-    email && { label: "Email", href: `mailto:${email}` },
-  ].filter(Boolean);
-  $("#contact-links").innerHTML = contactLinks
-    .map(
-      (l) =>
-        `<a class="btn ${l.primary ? "btn-primary" : "glass"}" href="${l.href}"${
-          l.external ? ' target="_blank" rel="noopener"' : ""
-        }>${l.label}</a>`
-    )
+  const tel = phone && `tel:${phone.replace(/\D/g, "")}`;
+
+  if (phone) {
+    $("#hero-phone").textContent = phone;
+    $("#hero-phone").href = tel;
+    $("#contact-phone").textContent = phone;
+    $("#contact-phone").href = tel;
+  } else {
+    $("#hero-phone").remove();
+    $("#contact-phone").remove();
+  }
+  $("#contact-links").innerHTML = [
+    whatsapp && { label: "WhatsApp", href: waLink() },
+    instagram && { label: `Instagram @${instagram}`, href: `https://instagram.com/${instagram}` },
+    email && { label: email, href: `mailto:${email}` },
+  ]
+    .filter(Boolean)
+    .map((l) => `<a href="${l.href}" target="_blank" rel="noopener">${l.label}</a>`)
     .join("");
 
   if (whatsapp) {
@@ -33,6 +42,16 @@
     fab.href = waLink("Hi Ronen! I found you through your website.");
     fab.hidden = false;
   }
+
+  // ── Hero piece ───────────────────────────────────────────
+  const hero = PIECES.find((p) => p.id === SITE.hero) || PIECES[0];
+  $("#hero-img").src = hero.images[0];
+  $("#hero-img").alt = hero.title;
+  if (hero.position) $("#hero-img").style.objectPosition = hero.position;
+  $("#hero-open").setAttribute("aria-label", `View ${hero.title}`);
+  $("#hero-caption").textContent = hero.title;
+  $("#hero-meta").textContent = meta(hero);
+  $("#hero-open").addEventListener("click", (e) => openSheet(hero, e.currentTarget));
 
   // ── Filters ──────────────────────────────────────────────
   const categories = ["All", ...new Set(PIECES.map((p) => p.category))];
@@ -53,16 +72,17 @@
   const grid = $("#grid");
   function renderGrid() {
     const items = PIECES.filter((p) => active === "All" || p.category === active);
+    $("#work-count").textContent = `${items.length} ${items.length === 1 ? "piece" : "pieces"}`;
     grid.innerHTML = items
       .map(
         (p, i) => `
-        <button class="card glass${p.wide ? " wide" : ""}" data-id="${p.id}" title="${p.title}" style="--i:${i}">
+        <button class="card${p.wide ? " wide" : ""}" data-id="${p.id}" title="${p.title}" style="--i:${i}">
           <div class="card-media"><img src="${p.images[0]}" alt="${p.title}" loading="lazy" onerror="this.classList.add('missing')"${
             p.position ? ` style="object-position:${p.position}"` : ""
           } /></div>
           <div class="card-label">
             <span class="card-title">${p.title}</span>
-            <span class="card-cat">${p.category}</span>
+            <span class="card-meta">${meta(p)}</span>
           </div>
         </button>`
       )
@@ -75,7 +95,6 @@
   renderGrid();
 
   // ── Detail sheet ─────────────────────────────────────────
-  // The sheet grows out of the card that opened it and shrinks back into it.
   const sheet = $("#sheet");
   const EASE_OUT = "cubic-bezier(0.23, 1, 0.32, 1)";
   let sourceCard = null;
@@ -94,7 +113,7 @@
     img.src = p.images[0];
     img.alt = p.title;
     img.style.objectPosition = p.position || "";
-    $("#sheet-cat").textContent = p.category;
+    $("#sheet-meta").textContent = `${meta(p)} · ${p.category}`;
     $("#sheet-title").textContent = p.title;
     $("#sheet-desc").textContent = p.description;
     $("#sheet-thumbs").innerHTML =
@@ -115,11 +134,10 @@
     animateSheet(true);
   }
 
-  // Materialize: scale + blur + opacity together, so the glass reads as arriving.
   const SHOWN = { opacity: 1, transform: "scale(1)", filter: "blur(0px)" };
   const HIDDEN = { opacity: 0, transform: "scale(0.6)", filter: "blur(4px)" };
 
-  // Grows out of the clicked card on open, shrinks back into it on close.
+  // Grows out of the clicked piece on open, shrinks back into it on close.
   // Interruptible: always starts from the current on-screen state. Reduced motion: opacity only.
   function animateSheet(opening) {
     const reduce = reduceMotion.matches;
@@ -139,7 +157,7 @@
     });
     anim.onfinish = () => {
       if (!opening) sheet.close();
-      anim.cancel(); // drop the fill so no leftover filter/transform sits on the glass
+      anim.cancel(); // drop the fill so no leftover filter/transform sits on the sheet
     };
     running = anim;
   }
