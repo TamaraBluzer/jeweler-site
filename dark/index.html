@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Ronen Peretz · Personal Jeweler</title>
+  <meta name="description" content="Ronen Peretz — personal jeweler. Bespoke engagement rings, fine jewelry commissions and heirloom restoration." />
+  <meta name="theme-color" content="#000000" />
+  <!-- Earlier dark design, kept for comparison. Hidden from search engines so it doesn't compete with the main site. -->
+  <meta name="robots" content="noindex" />
+  <meta property="og:title" content="Ronen Peretz · Personal Jeweler" />
+  <meta property="og:description" content="Bespoke engagement rings, fine jewelry commissions and heirloom restoration." />
+  <meta property="og:image" content="../assets/works/01-DVHIDovCPga.jpg" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css?v=5" />
+</head>
+<body>
+  <!-- Soft color field behind the glass so the blur has something to refract -->
+  <div class="backdrop" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+  </div>
+
+  <header class="nav glass">
+    <a href="#top" class="brand"><span class="mono">RP</span><span data-site="name">Ronen Peretz</span></a>
+    <nav class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#services">Services</a>
+      <a href="#contact" class="pill">Contact</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <p class="eyebrow" data-site="eyebrow">Personal Jeweler</p>
+      <h1 data-site="headline">Fine jewelry,<br />made for a lifetime.</h1>
+      <p class="lede" data-site="tagline"></p>
+      <div class="hero-actions">
+        <a href="#work" class="btn btn-primary">See the work</a>
+        <a href="#contact" class="btn glass">Design your ring</a>
+      </div>
+    </section>
+
+    <section id="work" class="section">
+      <div class="section-head">
+        <h2>Work</h2>
+        <div class="segmented glass" role="tablist" aria-label="Filter by category" id="filters"></div>
+      </div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <section id="services" class="section">
+      <div class="about glass">
+        <div class="about-text">
+          <h2>Your personal jeweler</h2>
+          <p data-site="about"></p>
+        </div>
+        <ul class="facts">
+          <li><strong>Engagement rings</strong><span>Bespoke, his specialty</span></li>
+          <li><strong>Commissions</strong><span>One of a kind, designed with you</span></li>
+          <li><strong>Restoration</strong><span>Heirlooms, renewed</span></li>
+          <li><strong>Jewelry care</strong><span>Resizing, re-setting, polishing</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <div class="contact glass">
+        <h2>Let's design something</h2>
+        <p>Tell Ronen what you have in mind, or bring a piece that needs care.</p>
+        <div class="contact-links" id="contact-links"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> <span data-site="name">Ronen Peretz</span> · Personal Jeweler</p>
+  </footer>
+
+  <!-- Floating WhatsApp button (href set from SITE.contact in main.js) -->
+  <a class="wa-fab" id="wa-fab" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" hidden>
+    <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path fill="currentColor" d="M16.04 3C8.86 3 3.03 8.82 3.03 16c0 2.3.6 4.54 1.75 6.52L3 29l6.65-1.74A12.95 12.95 0 0 0 16.04 29C23.2 29 29 23.18 29 16S23.2 3 16.04 3Zm0 23.8c-1.98 0-3.92-.53-5.61-1.53l-.4-.24-3.95 1.03 1.05-3.85-.26-.4A10.76 10.76 0 0 1 5.23 16c0-5.96 4.85-10.8 10.81-10.8 5.95 0 10.78 4.84 10.78 10.8 0 5.96-4.83 10.8-10.78 10.8Zm5.92-8.09c-.32-.16-1.92-.95-2.22-1.06-.3-.11-.51-.16-.73.16-.21.32-.84 1.06-1.03 1.27-.19.22-.38.24-.7.08-.32-.16-1.37-.5-2.6-1.6-.96-.86-1.61-1.92-1.8-2.24-.19-.32-.02-.5.14-.66.15-.14.32-.38.49-.57.16-.19.21-.32.32-.54.11-.21.05-.4-.03-.56-.08-.16-.73-1.76-1-2.41-.26-.63-.53-.55-.73-.56h-.62c-.21 0-.56.08-.86.4-.3.32-1.13 1.1-1.13 2.69 0 1.58 1.16 3.12 1.32 3.33.16.22 2.28 3.48 5.53 4.88.77.33 1.37.53 1.84.68.77.25 1.48.21 2.03.13.62-.09 1.92-.78 2.19-1.54.27-.76.27-1.41.19-1.54-.08-.14-.3-.22-.62-.38Z"/></svg>
+  </a>
+
+  <!-- Piece detail sheet -->
+  <dialog class="sheet glass" id="sheet" aria-labelledby="sheet-title">
+    <button class="close glass" id="sheet-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="sheet-media">
+      <img id="sheet-img" alt="" />
+      <div class="thumbs" id="sheet-thumbs"></div>
+    </div>
+    <div class="sheet-body">
+      <p class="eyebrow" id="sheet-cat"></p>
+      <h3 id="sheet-title"></h3>
+      <p id="sheet-desc"></p>
+      <div class="sheet-actions">
+        <a class="btn btn-primary" id="sheet-cta" target="_blank" rel="noopener">Ask about this piece</a>
+        <a class="btn glass" id="sheet-ig" target="_blank" rel="noopener">Watch the video</a>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="js/pieces.js?v=5"></script>
+  <script src="js/main.js?v=5"></script>
+</body>
+</html>

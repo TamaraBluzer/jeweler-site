@@ -21,3 +21,6 @@ Repo → Settings → Pages → Source: *Deploy from a branch* → `main` / root
 
 ## After editing
 Bump the `?v=` number on the CSS/JS links in `index.html` (e.g. `?v=3` → `?v=4`) so visitors' browsers fetch the new files instead of a cached copy.
+
+## Earlier dark design
+The previous dark "liquid glass" version lives in `dark/` (served at `/dark/`) for comparison. It has its own copy of the HTML/CSS/JS and its own `pieces.js`, and shares the photos in `assets/`. It's hidden from search engines.
