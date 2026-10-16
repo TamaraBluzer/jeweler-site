@@ -103,26 +103,43 @@ button { font: inherit; color: inherit; }
 }
 .hero h1 em { color: var(--gold); }
 .lede { font-size: 21px; line-height: 1.5; color: var(--soft); max-width: 32ch; margin: 30px 0 36px; }
-.hero-open { display: block; width: 100%; padding: 0; border: 0; background: var(--bg-deep); cursor: zoom-in; }
-.hero-open .hero-ring { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 70%; }
-.hero-logo { display: none; }
-/* Cut-out version: his logo above the ring, straight on the paper, like the original photo without the black */
-.hero-open.is-cutout {
+/* Hero: his logo above a piece you can turn in 3D, straight on the paper */
+.hero-figure { display: flex; flex-direction: column; align-items: center; }
+.hero-logo { width: 42%; height: auto; margin-bottom: 4%; }
+.hero-figure .spinner { width: 100%; }
+.hero-figure figcaption { width: 100%; }
+
+/* ── 3D spinner ─────────────────────────────────────────── */
+.spinner {
+  position: relative;
+  cursor: grab;
+  touch-action: pan-y; /* horizontal drags turn the piece; vertical swipes still scroll the page */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  outline-offset: 6px;
+}
+.spinner.grabbing { cursor: grabbing; }
+.spinner canvas { display: block; width: 100%; }
+/* Pieces shot on white: multiply makes the white vanish into the paper */
+.light canvas, .light video, .light img {
+  mix-blend-mode: multiply;
+  /* Feather the edges: the studio white isn't perfectly even, so fade it out instead of showing a box */
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%);
+}
+.spin-hint { color: var(--soft); }
+.caption-link {
+  padding: 0;
+  border: 0;
   background: none;
-  aspect-ratio: 4 / 5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8%;
+  font: italic 400 19px/1.4 var(--serif);
+  color: var(--soft);
+  cursor: pointer;
+  text-align: left;
+  transition: color 150ms ease;
 }
-.hero-open.is-cutout .hero-logo { display: block; width: 44%; height: auto; }
-.hero-open.is-cutout .hero-ring {
-  width: 72%; /* kept below full width: the source photo is small, so don't stretch it */
-  aspect-ratio: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 26px 22px rgba(70, 45, 10, 0.18)); /* grounds the ring on the page */
-}
+.caption-link:hover { color: var(--ink); }
 
 figcaption, .card-label {
   display: flex;
@@ -132,7 +149,7 @@ figcaption, .card-label {
   margin-top: 12px;
 }
 figcaption span { font-style: italic; color: var(--soft); }
-figcaption b, .card-meta { font: 500 10.5px/1.4 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
+figcaption b, .card-meta, .spin-hint { font: 500 10.5px/1.4 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
 
 /* ── Sections ───────────────────────────────────────────── */
 .section { width: var(--page); margin: 0 auto; padding: 28px 0 96px; border-top: 1px solid var(--rule); }
@@ -163,28 +180,30 @@ figcaption b, .card-meta { font: 500 10.5px/1.4 var(--sans); letter-spacing: 0.1
   background: none;
   text-align: left;
   cursor: zoom-in;
-  animation: rise 300ms var(--ease-out) both;
+  /* backwards, not both: a transform left on the card would isolate it and stop light pieces blending into the paper */
+  animation: rise 300ms var(--ease-out) backwards;
   animation-delay: calc(var(--i) * 35ms);
   transition: transform 160ms var(--ease-out);
 }
 .card:active { transform: scale(0.985); }
 .card.wide { grid-column: span 2; }
-.card-media { aspect-ratio: 1; overflow: hidden; background: var(--bg-deep); }
+.card-media { aspect-ratio: 1; overflow: hidden; background: #000; }
+.card-media.light { background: none; }
 /* Two square cells + one gap, so wide and square pieces line up row by row */
 .card.wide .card-media { aspect-ratio: 2.12; }
-.card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 300ms var(--ease-out); }
+.card-media img, .card-media video { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 300ms var(--ease-out); }
 .card-media img.missing { visibility: hidden; } /* broken photo: keep the paper frame, hide the broken-image icon */
 @media (hover: hover) and (pointer: fine) {
-  .card:hover .card-media img, .hero-open:hover img { transform: scale(1.03); }
-  .hero-open img { transition: transform 300ms var(--ease-out); }
-  .hero-open { overflow: hidden; }
+  .card:hover .card-media img, .card:hover .card-media video { transform: scale(1.03); }
 }
 .card-label { flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; }
 .card-title { max-width: 100%; font-size: 19px; font-style: italic; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .card-meta { color: var(--soft); }
 
 /* ── Studio ─────────────────────────────────────────────── */
-.studio-body { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; margin-top: 32px; }
+.studio-body { display: grid; grid-template-columns: 1.1fr 1fr minmax(180px, 240px); gap: 56px; margin-top: 32px; align-items: start; }
+.film { background: #000; aspect-ratio: 9 / 16; }
+.film video { display: block; width: 100%; height: 100%; object-fit: cover; }
 .studio-text { font-size: clamp(24px, 2.6vw, 32px); line-height: 1.35; }
 .services div { padding: 16px 0; border-bottom: 1px solid var(--rule); }
 .services div:first-child { padding-top: 6px; }
@@ -259,10 +278,10 @@ figcaption b, .card-meta { font: 500 10.5px/1.4 var(--sans); letter-spacing: 0.1
 }
 .sheet[open] { display: grid; }
 .sheet::backdrop { background: rgba(29, 26, 22, 0.35); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
-.sheet-media { padding: 14px; }
-.sheet-media > img { width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--bg-deep); }
-.thumbs { display: flex; gap: 8px; margin-top: 8px; }
-.thumbs img { width: 64px; height: 64px; object-fit: cover; cursor: pointer; }
+.sheet-media { padding: 14px; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+.sheet-media > img, .sheet-media > video { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; background: #000; }
+.sheet-media.light > img, .sheet-media.light > video { background: none; object-fit: contain; }
+.sheet-media .spin-hint { text-align: center; margin: 0; }
 .sheet-body { padding: 56px 40px 36px 24px; display: flex; flex-direction: column; }
 .sheet-body h3 { font-weight: 400; font-size: 44px; line-height: 1.05; margin: 18px 0 18px; }
 .sheet-desc { color: var(--soft); font-size: 20px; margin-bottom: 32px; }
@@ -293,6 +312,7 @@ figcaption b, .card-meta { font: 500 10.5px/1.4 var(--sans); letter-spacing: 0.1
   :root { --page: calc(100% - 40px); }
   .hero { grid-template-columns: 1fr; gap: 44px; padding-top: 112px; }
   .studio-body { grid-template-columns: 1fr; gap: 32px; }
+  .film { width: min(280px, 70%); }
   .sheet { grid-template-columns: 1fr; }
   .sheet-body { padding: 8px 22px 26px; }
   .sheet-body h3 { font-size: 36px; }
@@ -310,6 +330,6 @@ figcaption b, .card-meta { font: 500 10.5px/1.4 var(--sans); letter-spacing: 0.1
   html { scroll-behavior: auto; }
   .in, .card, .wa-fab { animation-name: fade; animation-duration: 200ms; animation-delay: 0ms; }
   .card:active, .wa-fab:active, .close:active, .links a:active { transform: none; }
-  .card:hover .card-media img, .hero-open:hover img, .wa-fab:hover { transform: none; }
+  .card:hover .card-media img, .card:hover .card-media video, .wa-fab:hover { transform: none; }
 }
 @keyframes fade { from { opacity: 0; } }

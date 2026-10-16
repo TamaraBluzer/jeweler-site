@@ -8,13 +8,13 @@
   <meta name="theme-color" content="#f3eee6" />
   <meta property="og:title" content="Ronen Peretz · Personal Jeweler" />
   <meta property="og:description" content="Quality. Service. Price. Engagement rings and fine jewelry, designed with you and made to order." />
-  <meta property="og:image" content="assets/works/01-DVHIDovCPga.jpg" />
+  <meta property="og:image" content="assets/media/oval-half-eternity/poster.jpg" />
   <link rel="icon" href="assets/brand/favicon.png" type="image/png" />
   <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=10" />
+  <link rel="stylesheet" href="css/style.css?v=15" />
 </head>
 <body>
   <header class="nav">
@@ -38,11 +38,13 @@
         </div>
       </div>
       <figure class="hero-figure in" style="--d:1">
-        <button class="hero-open" id="hero-open">
-          <img class="hero-logo" src="assets/brand/rp-logo.png" alt="" />
-          <img class="hero-ring" id="hero-img" alt="" />
-        </button>
-        <figcaption><span id="hero-caption"></span><b id="hero-meta"></b></figcaption>
+        <img class="hero-logo" src="assets/brand/rp-logo.png" alt="" />
+        <!-- 3D view: frames of one full turn, drawn by the Spinner in main.js -->
+        <div class="spinner light" id="hero-spin"></div>
+        <figcaption>
+          <button class="caption-link" id="hero-open"><span id="hero-caption"></span></button>
+          <b class="spin-hint" aria-hidden="true">Drag to turn</b>
+        </figcaption>
       </figure>
     </section>
 
@@ -64,6 +66,9 @@
           <div><dt>Restoration</dt><dd>Old and inherited jewelry, renewed</dd></div>
           <div><dt>Jewelry care</dt><dd>Resizing, re-setting, polishing</dd></div>
         </dl>
+        <figure class="film">
+          <video id="film" muted playsinline loop preload="none" aria-label="Short film of a diamond tennis bracelet"></video>
+        </figure>
       </div>
     </section>
 
@@ -90,22 +95,18 @@
     <button class="close" id="sheet-close" aria-label="Close">
       <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
     </button>
-    <div class="sheet-media">
-      <img id="sheet-img" alt="" />
-      <div class="thumbs" id="sheet-thumbs"></div>
-    </div>
+    <div class="sheet-media" id="sheet-media"></div>
     <div class="sheet-body">
       <p class="label" id="sheet-meta"></p>
       <h3 id="sheet-title"></h3>
       <p class="sheet-desc" id="sheet-desc"></p>
       <div class="links sheet-actions">
         <a id="sheet-cta" target="_blank" rel="noopener">Ask Ronen about this piece</a>
-        <a class="quiet" id="sheet-ig" target="_blank" rel="noopener">Watch the video</a>
       </div>
     </div>
   </dialog>
 
-  <script src="js/pieces.js?v=10"></script>
-  <script src="js/main.js?v=10"></script>
+  <script src="js/pieces.js?v=15"></script>
+  <script src="js/main.js?v=15"></script>
 </body>
 </html>
