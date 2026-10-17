@@ -191,6 +191,7 @@
   $("#year").textContent = new Date().getFullYear();
 
   // ── Contact ──────────────────────────────────────────────
+  const INSTAGRAM_ICON = `<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="0.9" fill="currentColor" stroke="none"/></svg>`;
   const { whatsapp, phone, instagram, email } = SITE.contact;
   const waLink = (text) =>
     `https://wa.me/${whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
@@ -207,11 +208,15 @@
   }
   $("#contact-links").innerHTML = [
     whatsapp && { label: "WhatsApp", href: waLink() },
-    instagram && { label: `Instagram @${instagram}`, href: `https://instagram.com/${instagram}` },
+    instagram && { icon: INSTAGRAM_ICON, aria: `Instagram, @${instagram}`, href: `https://instagram.com/${instagram}` },
     email && { label: email, href: `mailto:${email}` },
   ]
     .filter(Boolean)
-    .map((l) => `<a href="${l.href}" target="_blank" rel="noopener">${l.label}</a>`)
+    .map((l) =>
+      l.icon
+        ? `<a class="icon-link" href="${l.href}" target="_blank" rel="noopener" aria-label="${l.aria}" title="${l.aria}">${l.icon}</a>`
+        : `<a href="${l.href}" target="_blank" rel="noopener">${l.label}</a>`
+    )
     .join("");
 
   if (whatsapp) {

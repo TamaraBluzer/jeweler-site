@@ -50,6 +50,9 @@ button { font: inherit; color: inherit; }
 .links a.quiet { border-color: transparent; color: var(--soft); }
 .links a.quiet:hover { color: var(--ink); }
 .links a:active { transform: translateY(1px); }
+.links { align-items: center; }
+.links a.icon-link { display: inline-flex; padding: 0; border: 0; } /* icon instead of an underlined word */
+.links a.icon-link svg { display: block; }
 
 /* First-visit entrance: a short stagger, once per page load */
 .in { animation: rise 600ms var(--ease-out) backwards; animation-delay: calc(var(--d, 0) * 70ms); }
