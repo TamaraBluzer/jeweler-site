@@ -17,10 +17,11 @@
       this.base = MEDIA(piece.id) + "spin/";
       this.onTap = onTap;
       this.images = [];
-      this.angle = 0; // in turns, 0..1
+      this.startFrame = (piece.start || 1) - 1; // frame to open on
+      this.angle = (this.startFrame + 0.5) / this.count; // in turns, 0..1 (centred on the start frame)
       this.velocity = 0; // turns per second
       this.auto = reduceMotion.matches ? 0 : 1 / 12; // one slow turn every 12s
-      this.idleSince = 0;
+      this.idleSince = Infinity; // stays put until the start frame is on screen, then holds before turning
       this.dragging = false;
 
       el.tabIndex = 0;
@@ -50,17 +51,20 @@
 
     load() {
       if (this.images.length) return;
-      for (let i = 0; i < this.count; i++) {
+      this.images = new Array(this.count);
+      // Start frame first, so the piece opens on it; the rest follow in turning order
+      for (let k = 0; k < this.count; k++) {
+        const i = (this.startFrame + k) % this.count;
         const img = new Image();
         img.decoding = "async";
         img.src = `${this.base}${String(i + 1).padStart(2, "0")}.jpg`;
-        if (i === 0) img.onload = () => { this.fit(); this.draw(); };
-        this.images.push(img);
+        if (k === 0) img.onload = () => { this.fit(); this.idleSince = performance.now(); };
+        this.images[i] = img;
       }
     }
 
     fit() {
-      const first = this.images[0];
+      const first = this.images[this.startFrame];
       if (!first?.naturalWidth) return;
       const w = this.el.clientWidth, dpr = Math.min(devicePixelRatio || 1, 2);
       const h = Math.round((w * first.naturalHeight) / first.naturalWidth);

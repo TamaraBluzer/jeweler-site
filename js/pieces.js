@@ -8,6 +8,7 @@
 //
 // Fields:
 //   spin   → number of frames in spin/ (omit if there are none)
+//   start  → spin frame to open on (e.g. the front view); it holds there briefly, then turns
 //   light  → true when the piece was shot on a white/cream background;
 //            it then sits straight on the page instead of in a dark frame
 //   wide   → spans two columns in the grid (for landscape footage)
@@ -44,7 +45,7 @@ const PIECES = [
     description: "A round diamond held in a sweeping rose-gold bypass setting." },
 
   // Bands
-  { id: "oval-half-eternity", title: "Oval Half-Eternity Band", category: "Bands", kind: "video", spin: 60, light: true,
+  { id: "oval-half-eternity", title: "Oval Half-Eternity Band", category: "Bands", kind: "video", spin: 60, start: 39, light: true,
     description: "Five oval diamonds across the top of a yellow-gold band." },
   { id: "oval-eternity", title: "Oval Eternity Band", category: "Bands", kind: "photo", light: true, wide: true,
     description: "Oval diamonds set all the way around, in white gold." },
