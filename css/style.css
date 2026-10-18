@@ -97,9 +97,7 @@ button { font: inherit; color: inherit; }
   gap: 64px;
   align-items: end;
 }
-.kicker { margin-bottom: 10px; }
-/* His name in Hebrew, so the site also reads (and is found) as רונן פרץ */
-.name-he { display: table; margin-bottom: 26px; font: 400 17px/1.4 "Frank Ruhl Libre", "Times New Roman", serif; color: var(--gold); }
+.kicker { margin-bottom: 28px; }
 .hero h1 {
   font-weight: 400;
   font-size: clamp(52px, 7vw, 96px);
