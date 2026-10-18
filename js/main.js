@@ -1,6 +1,10 @@
 (() => {
   const $ = (sel) => document.querySelector(sel);
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  // Motion is off when the device asks for less motion OR the visitor pressed "Pause animation"
+  let motionPaused = false;
+  const calm = () => reduceMotion.matches || motionPaused;
+  const spinners = new Set();
 
   // Catalogue number, fixed by position in PIECES so it stays the same under any filter
   const no = (p) => `No. ${String(PIECES.indexOf(p) + 1).padStart(2, "0")}`;
@@ -20,7 +24,8 @@
       this.startFrame = (piece.start || 1) - 1; // frame to open on
       this.angle = (this.startFrame + 0.5) / this.count; // in turns, 0..1 (centred on the start frame)
       this.velocity = 0; // turns per second
-      this.auto = reduceMotion.matches ? 0 : 1 / 12; // one slow turn every 12s
+      this.auto = 1 / 12; // one slow turn every 12s (only while motion is allowed)
+      spinners.add(this);
       this.idleSince = Infinity; // stays put until the start frame is on screen, then holds before turning
       this.dragging = false;
 
@@ -99,12 +104,12 @@
       if (!this.dragging) {
         // Momentum decays exponentially (like scroll), then eases back to the slow turn
         const idle = now - this.idleSince > 1500;
-        const goal = idle ? this.auto : 0;
+        const goal = idle && !calm() ? this.auto : 0;
         this.velocity += (goal - this.velocity) * (1 - Math.exp(-dt * (idle ? 1.5 : 2.2)));
         this.angle += this.velocity * dt;
       }
       this.draw();
-      const moving = this.dragging || Math.abs(this.velocity) > 0.0005 || this.auto;
+      const moving = this.dragging || Math.abs(this.velocity) > 0.0005 || !calm();
       this.raf = this.visible && moving && this.el.isConnected ? requestAnimationFrame(this.tick) : 0;
     }
 
@@ -140,7 +145,7 @@
       this.el.removeEventListener("pointerup", this.onUp);
       this.el.removeEventListener("pointercancel", this.onUp);
       if (performance.now() - this.lastT > 80) this.velocity = 0; // held still before letting go
-      if (reduceMotion.matches) this.velocity = 0;
+      if (calm()) this.velocity = 0;
       const tap = e.type === "pointerup" && Math.abs(e.clientX - this.downX) < 5 && performance.now() - this.downT < 350;
       if (tap) this.onTap?.(this.el);
     }
@@ -160,6 +165,7 @@
       this.raf = 0;
       this.resize.disconnect();
       this.seen.disconnect();
+      spinners.delete(this);
       this.el.replaceChildren();
     }
   }
@@ -167,14 +173,14 @@
   // ── Looping videos: load when near, play only while visible ─
   const nearby = new IntersectionObserver(
     (entries) => entries.forEach((e) => {
-      if (e.isIntersecting && !e.target.src && !reduceMotion.matches) e.target.src = e.target.dataset.src;
+      if (e.isIntersecting && !e.target.src && !calm()) e.target.src = e.target.dataset.src;
     }),
     { rootMargin: "300px" }
   );
   const onScreen = new IntersectionObserver(
     (entries) => entries.forEach((e) => {
       const v = e.target;
-      if (e.isIntersecting && !reduceMotion.matches) {
+      if (e.isIntersecting && !calm()) {
         if (!v.src) v.src = v.dataset.src; // a fast jump can reach it before the preload observer does
         v.play().catch(() => {});
       } else v.pause();
@@ -238,8 +244,7 @@
   if (film && SITE.film) {
     film.poster = MEDIA(SITE.film) + "poster.jpg";
     film.dataset.src = MEDIA(SITE.film) + "video.mp4";
-    if (reduceMotion.matches) { film.src = film.dataset.src; film.controls = true; }
-    else watchVideo(film);
+    watchVideo(film);
   }
 
   // ── Filters ──────────────────────────────────────────────
@@ -247,13 +252,13 @@
   let active = "All";
   const filters = $("#filters");
   filters.innerHTML = categories
-    .map((c) => `<button role="tab" aria-selected="${c === active}" data-cat="${c}">${c}</button>`)
+    .map((c) => `<button type="button" aria-pressed="${c === active}" data-cat="${c}">${c}</button>`)
     .join("");
   filters.addEventListener("click", (e) => {
     const btn = e.target.closest("button");
     if (!btn || btn.dataset.cat === active) return;
     active = btn.dataset.cat;
-    filters.querySelectorAll("button").forEach((b) => b.setAttribute("aria-selected", b === btn));
+    filters.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === btn));
     renderGrid();
   });
 
@@ -323,7 +328,7 @@
       sheetMedia.append(box, hint);
       sheetSpinner = new Spinner(box, p);
     } else if (p.kind === "video") {
-      const play = reduceMotion.matches ? "controls" : "autoplay";
+      const play = calm() ? "controls" : "autoplay";
       sheetMedia.innerHTML = `<video muted playsinline loop ${play} poster="${still(p)}" src="${MEDIA(p.id)}video.mp4" aria-label="${p.title}"></video>`;
     } else {
       sheetMedia.innerHTML = `<img src="${still(p)}" alt="${p.title}" />`;
@@ -348,7 +353,7 @@
   // Grows out of the clicked piece on open, shrinks back into it on close.
   // Interruptible: always starts from the current on-screen state. Reduced motion: opacity only.
   function animateSheet(opening) {
-    const reduce = reduceMotion.matches;
+    const reduce = calm();
     let from = null;
     if (running?.playState === "running") {
       const cs = getComputedStyle(sheet);
@@ -390,6 +395,74 @@
   // Open a piece directly from a shared link, e.g. site.com/#bridal-set
   const linked = PIECES.find((p) => `#${p.id}` === location.hash);
   if (linked) openSheet(linked);
+
+  // ── Accessibility menu ───────────────────────────────────
+  // Built in (no third-party overlay). Each option is a class on <html>, remembered on this device.
+  const A11Y = ["pause", "text", "contrast", "links", "font"];
+  const a11yFab = $("#a11y-fab");
+  const a11yPanel = $("#a11y-panel");
+  const saved = (() => { try { return JSON.parse(localStorage.getItem("a11y") || "[]"); } catch { return []; } })();
+
+  function setPaused(on) {
+    motionPaused = on;
+    if (on) {
+      document.querySelectorAll("video").forEach((v) => v.pause());
+      spinners.forEach((sp) => { sp.velocity = 0; }); // stop dead, don't coast
+    } else {
+      // Re-observe so whatever is on screen starts again; resume any visible spinners
+      document.querySelectorAll("video[data-src]").forEach((v) => { onScreen.unobserve(v); onScreen.observe(v); });
+      sheetMedia.querySelector("video")?.play().catch(() => {});
+      spinners.forEach((sp) => { sp.idleSince = performance.now() - 1500; sp.start(); });
+    }
+  }
+
+  // Entrance animations play once. Mark them finished so un-pausing never replays them.
+  const settle = (el) => el.classList.add("settled");
+  document.addEventListener("animationend", (e) => {
+    if (e.target.matches?.(".in, .card")) settle(e.target);
+  });
+
+  function applyA11y(option, on) {
+    if (option === "pause" && !on) document.querySelectorAll(".in, .card").forEach(settle);
+    document.documentElement.classList.toggle(`a11y-${option}`, on);
+    a11yPanel.querySelector(`[data-a11y="${option}"]`)?.setAttribute("aria-pressed", on);
+    if (option === "pause") setPaused(on);
+  }
+
+  function saveA11y() {
+    const active = A11Y.filter((o) => document.documentElement.classList.contains(`a11y-${o}`));
+    try { localStorage.setItem("a11y", JSON.stringify(active)); } catch {}
+  }
+
+  saved.filter((o) => A11Y.includes(o)).forEach((o) => applyA11y(o, true));
+
+  function togglePanel(open) {
+    a11yPanel.hidden = !open;
+    a11yFab.setAttribute("aria-expanded", open);
+    if (open) a11yPanel.querySelector("button")?.focus();
+  }
+  a11yFab.addEventListener("click", () => togglePanel(a11yPanel.hidden));
+  a11yPanel.addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    if (btn.dataset.a11y) {
+      const on = btn.getAttribute("aria-pressed") !== "true";
+      applyA11y(btn.dataset.a11y, on);
+    } else if (btn.hasAttribute("data-a11y-reset")) {
+      A11Y.forEach((o) => applyA11y(o, false));
+    } else if (btn.hasAttribute("data-a11y-close")) {
+      togglePanel(false);
+      a11yFab.focus();
+      return;
+    }
+    saveA11y();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !a11yPanel.hidden) { togglePanel(false); a11yFab.focus(); }
+  });
+  document.addEventListener("click", (e) => {
+    if (!a11yPanel.hidden && !a11yPanel.contains(e.target) && !a11yFab.contains(e.target)) togglePanel(false);
+  });
 
   // ── Nav: firmer glass after scrolling ────────────────────
   const nav = $(".nav");

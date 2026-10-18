@@ -157,7 +157,7 @@ figcaption b, .card-meta, .spin-hint { font: 500 10.5px/1.4 var(--sans); letter-
 /* ── Sections ───────────────────────────────────────────── */
 .section { width: var(--page); margin: 0 auto; padding: 28px 0 96px; border-top: 1px solid var(--rule); }
 .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
-.count { margin-left: 14px; color: var(--soft); opacity: 0.7; }
+.count { margin-left: 14px; color: var(--soft); }
 
 /* Filters: plain words, the active one underlined */
 .filters { display: flex; gap: 4px 22px; flex-wrap: wrap; }
@@ -171,7 +171,7 @@ figcaption b, .card-meta, .spin-hint { font: 500 10.5px/1.4 var(--sans); letter-
   transition: color 150ms ease, border-color 150ms ease;
 }
 .filters button:hover { color: var(--ink); }
-.filters button[aria-selected="true"] { color: var(--ink); border-color: var(--ink); }
+.filters button[aria-pressed="true"] { color: var(--ink); border-color: var(--ink); }
 
 /* ── Work grid: photographs as prints, no boxes ─────────── */
 .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-flow: dense; gap: 48px 28px; }
@@ -324,9 +324,87 @@ figcaption b, .card-meta, .spin-hint { font: 500 10.5px/1.4 var(--sans); letter-
   .grid { grid-template-columns: 1fr; gap: 40px; }
   .card.wide { grid-column: auto; }
   .card.wide .card-media { aspect-ratio: 16 / 9; }
-  .footer { padding-bottom: 96px; } /* keep clear of the WhatsApp button */
+  .footer { padding-bottom: 96px; flex-direction: column; gap: 8px; } /* keep clear of the floating buttons */
   .nav-links { gap: 0; }
 }
+
+/* ── Skip link: first stop for keyboard users ───────────── */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 10px 16px;
+  background: var(--ink);
+  color: var(--bg);
+  font: 500 13px/1 var(--sans);
+  transform: translateY(-200%);
+}
+.skip-link:focus { transform: none; }
+.footer a { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ── Accessibility menu ─────────────────────────────────── */
+.settled { animation: none !important; } /* entrance already played */
+.a11y-fab {
+  position: fixed;
+  left: max(20px, env(safe-area-inset-left));
+  bottom: max(20px, env(safe-area-inset-bottom));
+  z-index: 20;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  background: #1d4ed8; /* the familiar accessibility blue, so people recognise it */
+  box-shadow: 0 6px 18px rgba(29, 78, 216, 0.3), 0 2px 6px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: transform 140ms var(--ease-out);
+}
+.a11y-fab:active { transform: scale(0.94); }
+.a11y-panel {
+  position: fixed;
+  left: max(20px, env(safe-area-inset-left));
+  bottom: calc(max(20px, env(safe-area-inset-bottom)) + 60px);
+  z-index: 21;
+  width: min(260px, calc(100vw - 40px));
+  padding: 14px;
+  display: grid;
+  gap: 6px;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  box-shadow: 0 18px 50px rgba(40, 28, 10, 0.2);
+}
+.a11y-panel[hidden] { display: none; }
+.a11y-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.a11y-panel button[data-a11y] {
+  text-align: left;
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: none;
+  font: 500 14px/1.2 var(--sans);
+  cursor: pointer;
+}
+.a11y-panel button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.a11y-panel button[aria-pressed="true"]::after { content: " ✓"; }
+.a11y-close { border: 0; background: none; padding: 6px; cursor: pointer; color: var(--soft); }
+.a11y-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; font: 500 13px/1.2 var(--sans); }
+.a11y-foot button { border: 0; background: none; padding: 6px 0; font: inherit; text-decoration: underline; cursor: pointer; }
+.a11y-foot a { text-decoration: underline; }
+
+/* The options themselves (classes on <html>) */
+.a11y-pause *, .a11y-pause *::before, .a11y-pause *::after { animation: none !important; transition: none !important; }
+.a11y-pause { scroll-behavior: auto; }
+.a11y-text main, .a11y-text .footer { zoom: 1.2; }
+.a11y-contrast { --soft: #3a342d; --gold: #5c4515; --rule: rgba(29, 26, 22, 0.45); }
+.a11y-contrast .nav { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: 0 0 0 1px var(--ink); }
+.a11y-links a, .a11y-links .caption-link, .a11y-links .filters button { text-decoration: underline; text-underline-offset: 3px; }
+.a11y-font { --serif: var(--sans); }
+.a11y-font * { font-style: normal !important; }
 
 /* Reduced motion: gentler, not zero. Keep short opacity fades, drop movement and scaling. */
 @media (prefers-reduced-motion: reduce) {
