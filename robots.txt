@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /dark/
 
-Sitemap: https://tamarabluzer.github.io/jeweler-site/sitemap.xml
+Sitemap: https://ronenperetz.com/sitemap.xml
