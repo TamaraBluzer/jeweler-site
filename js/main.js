@@ -248,7 +248,10 @@
   }
 
   // ── Filters ──────────────────────────────────────────────
-  const categories = ["All", ...new Set(PIECES.map((p) => p.category))];
+  // Filter order stays fixed, whatever order the pieces are in
+  const ORDER = ["Engagement", "Bands", "Earrings", "Necklaces", "Bracelets"];
+  const found = [...new Set(PIECES.map((p) => p.category))];
+  const categories = ["All", ...ORDER.filter((c) => found.includes(c)), ...found.filter((c) => !ORDER.includes(c))];
   let active = "All";
   const filters = $("#filters");
   filters.innerHTML = categories

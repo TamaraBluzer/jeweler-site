@@ -20,6 +20,25 @@ const SITE = {
 
 const PIECES = [
   {
+    "id": "oval-eternity",
+    "title": "Oval Eternity Band",
+    "category": "Bands",
+    "images": [
+      "../assets/media/oval-eternity/photo.jpg"
+    ],
+    "description": "Oval diamonds set all the way around, in white gold.",
+    "wide": true
+  },
+  {
+    "id": "heart-eternity-band",
+    "title": "Heart Eternity Band",
+    "category": "Bands",
+    "images": [
+      "../assets/media/heart-eternity-band/poster.jpg"
+    ],
+    "description": "Heart-shaped diamonds in yellow-gold bezels, all the way around."
+  },
+  {
     "id": "bridal-set",
     "title": "Three-Stone Bridal Set",
     "category": "Engagement",
@@ -38,6 +57,25 @@ const PIECES = [
     "description": "An emerald-cut diamond on a band of marquise and round stones, in white gold."
   },
   {
+    "id": "tennis-bracelet",
+    "title": "Tennis Bracelet",
+    "category": "Bracelets",
+    "images": [
+      "../assets/media/tennis-bracelet/poster.jpg"
+    ],
+    "description": "Round diamonds set edge to edge, in white gold.",
+    "wide": true
+  },
+  {
+    "id": "fine-tennis-bracelet",
+    "title": "Fine Tennis Bracelet",
+    "category": "Bracelets",
+    "images": [
+      "../assets/media/fine-tennis-bracelet/poster.jpg"
+    ],
+    "description": "A slim line of diamonds, in white gold."
+  },
+  {
     "id": "marquise-solitaire",
     "title": "Marquise Solitaire",
     "category": "Engagement",
@@ -48,15 +86,6 @@ const PIECES = [
     "wide": true
   },
   {
-    "id": "bypass-solitaire",
-    "title": "Bypass Solitaire",
-    "category": "Engagement",
-    "images": [
-      "../assets/media/bypass-solitaire/poster.jpg"
-    ],
-    "description": "A round diamond held in a sweeping rose-gold bypass setting."
-  },
-  {
     "id": "oval-half-eternity",
     "title": "Oval Half-Eternity Band",
     "category": "Bands",
@@ -64,25 +93,6 @@ const PIECES = [
       "../assets/media/oval-half-eternity/poster.jpg"
     ],
     "description": "Five oval diamonds across the top of a yellow-gold band."
-  },
-  {
-    "id": "oval-eternity",
-    "title": "Oval Eternity Band",
-    "category": "Bands",
-    "images": [
-      "../assets/media/oval-eternity/photo.jpg"
-    ],
-    "description": "Oval diamonds set all the way around, in white gold.",
-    "wide": true
-  },
-  {
-    "id": "heart-eternity-band",
-    "title": "Heart Eternity Band",
-    "category": "Bands",
-    "images": [
-      "../assets/media/heart-eternity-band/poster.jpg"
-    ],
-    "description": "Heart-shaped diamonds in yellow-gold bezels, all the way around."
   },
   {
     "id": "asscher-studs-gold",
@@ -175,25 +185,6 @@ const PIECES = [
     "description": "A rose-gold pendant set with diamonds."
   },
   {
-    "id": "tennis-bracelet",
-    "title": "Tennis Bracelet",
-    "category": "Bracelets",
-    "images": [
-      "../assets/media/tennis-bracelet/poster.jpg"
-    ],
-    "description": "Round diamonds set edge to edge, in white gold.",
-    "wide": true
-  },
-  {
-    "id": "fine-tennis-bracelet",
-    "title": "Fine Tennis Bracelet",
-    "category": "Bracelets",
-    "images": [
-      "../assets/media/fine-tennis-bracelet/poster.jpg"
-    ],
-    "description": "A slim line of diamonds, in white gold."
-  },
-  {
     "id": "star-bangle",
     "title": "Star Bangle",
     "category": "Bracelets",
@@ -210,5 +201,14 @@ const PIECES = [
       "../assets/media/id-bracelet/poster.jpg"
     ],
     "description": "A yellow-gold chain with an engravable bar and a flower charm."
+  },
+  {
+    "id": "bypass-solitaire",
+    "title": "Bypass Solitaire",
+    "category": "Engagement",
+    "images": [
+      "../assets/media/bypass-solitaire/poster.jpg"
+    ],
+    "description": "A round diamond held in a sweeping rose-gold bypass setting."
   }
 ];

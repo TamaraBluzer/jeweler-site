@@ -331,16 +331,24 @@ figcaption b, .card-meta, .spin-hint { font: 500 10.5px/1.4 var(--sans); letter-
 /* ── Skip link: first stop for keyboard users ───────────── */
 .skip-link {
   position: fixed;
-  top: 12px;
+  top: max(12px, env(safe-area-inset-top));
   left: 12px;
   z-index: 100;
   padding: 10px 16px;
   background: var(--ink);
   color: var(--bg);
   font: 500 13px/1 var(--sans);
-  transform: translateY(-200%);
 }
-.skip-link:focus { transform: none; }
+/* Hidden until focused. Clipped rather than moved off-screen: iPhone's floating
+   address bar exposes the area above the page, where a shifted link would show. */
+.skip-link:not(:focus) {
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 .footer a { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ── Accessibility menu ─────────────────────────────────── */

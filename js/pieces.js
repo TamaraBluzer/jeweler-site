@@ -34,25 +34,23 @@ const SITE = {
 };
 
 const PIECES = [
-  // Engagement
-  { id: "bridal-set", title: "Three-Stone Bridal Set", category: "Engagement", kind: "video", spin: 60, light: true,
-    description: "A three-stone engagement ring with a matching band, in white gold." },
-  { id: "emerald-cut-ring", title: "Emerald-Cut Ring", category: "Engagement", kind: "video",
-    description: "An emerald-cut diamond on a band of marquise and round stones, in white gold." },
-  { id: "marquise-solitaire", title: "Marquise Solitaire", category: "Engagement", kind: "video", wide: true,
-    description: "A marquise diamond on a slim, tapering white-gold band." },
-  { id: "bypass-solitaire", title: "Bypass Solitaire", category: "Engagement", kind: "video",
-    description: "A round diamond held in a sweeping rose-gold bypass setting." },
-
-  // Bands
-  { id: "oval-half-eternity", title: "Oval Half-Eternity Band", category: "Bands", kind: "video", spin: 60, start: 39, light: true,
-    description: "Five oval diamonds across the top of a yellow-gold band." },
+  // The order here is the order on the site (and sets each piece's catalogue number)
   { id: "oval-eternity", title: "Oval Eternity Band", category: "Bands", kind: "photo", light: true, wide: true,
     description: "Oval diamonds set all the way around, in white gold." },
   { id: "heart-eternity-band", title: "Heart Eternity Band", category: "Bands", kind: "video", light: true,
     description: "Heart-shaped diamonds in yellow-gold bezels, all the way around." },
-
-  // Earrings
+  { id: "bridal-set", title: "Three-Stone Bridal Set", category: "Engagement", kind: "video", spin: 60, light: true,
+    description: "A three-stone engagement ring with a matching band, in white gold." },
+  { id: "emerald-cut-ring", title: "Emerald-Cut Ring", category: "Engagement", kind: "video",
+    description: "An emerald-cut diamond on a band of marquise and round stones, in white gold." },
+  { id: "tennis-bracelet", title: "Tennis Bracelet", category: "Bracelets", kind: "video", wide: true,
+    description: "Round diamonds set edge to edge, in white gold." },
+  { id: "fine-tennis-bracelet", title: "Fine Tennis Bracelet", category: "Bracelets", kind: "video",
+    description: "A slim line of diamonds, in white gold." },
+  { id: "marquise-solitaire", title: "Marquise Solitaire", category: "Engagement", kind: "video", wide: true,
+    description: "A marquise diamond on a slim, tapering white-gold band." },
+  { id: "oval-half-eternity", title: "Oval Half-Eternity Band", category: "Bands", kind: "video", spin: 60, start: 39, light: true,
+    description: "Five oval diamonds across the top of a yellow-gold band." },
   { id: "asscher-studs-gold", title: "Asscher Studs, Yellow Gold", category: "Earrings", kind: "video", spin: 48, light: true,
     description: "Asscher-cut diamonds in yellow-gold settings." },
   { id: "diamond-hoops", title: "Diamond Hoops", category: "Earrings", kind: "video", spin: 48,
@@ -63,8 +61,6 @@ const PIECES = [
     description: "Asscher-cut diamonds framed in white-gold bezels." },
   { id: "drop-earrings", title: "Diamond Drop Earrings", category: "Earrings", kind: "video",
     description: "Small diamond drops on white-gold huggie hoops." },
-
-  // Necklaces
   { id: "solitaire-pendant", title: "Solitaire Pendant", category: "Necklaces", kind: "video",
     description: "A single diamond on a fine white-gold chain." },
   { id: "pendant-photo", title: "Four-Prong Pendant", category: "Necklaces", kind: "photo",
@@ -75,16 +71,12 @@ const PIECES = [
     description: "Diamonds in yellow-gold bezels, spaced along a fine chain." },
   { id: "basketball-pendant", title: "Basketball Pendant", category: "Necklaces", kind: "video",
     description: "A rose-gold pendant set with diamonds." },
-
-  // Bracelets
-  { id: "tennis-bracelet", title: "Tennis Bracelet", category: "Bracelets", kind: "video", wide: true,
-    description: "Round diamonds set edge to edge, in white gold." },
-  { id: "fine-tennis-bracelet", title: "Fine Tennis Bracelet", category: "Bracelets", kind: "video",
-    description: "A slim line of diamonds, in white gold." },
   { id: "star-bangle", title: "Star Bangle", category: "Bracelets", kind: "video",
     description: "An open bangle finished with two stars." },
   { id: "id-bracelet", title: "Name Bar Bracelet", category: "Bracelets", kind: "video",
     description: "A yellow-gold chain with an engravable bar and a flower charm." },
+  { id: "bypass-solitaire", title: "Bypass Solitaire", category: "Engagement", kind: "video",
+    description: "A round diamond held in a sweeping rose-gold bypass setting." },
 ];
 
 // Where a piece's media lives (kept here so the folder layout is defined once)
