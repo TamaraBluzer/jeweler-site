@@ -43,5 +43,6 @@ Settings (repo → Settings → Secrets and variables → Actions):
 - variable `FORM_SHEET_ID`: the response spreadsheet's id (the workflow stays off until this is set)
 - variable `ALLOWED_EMAILS`: comma-separated Google accounts allowed to add pieces
 - variable `AUTO_PUBLISH`: `true` (default) publishes straight away; `false` opens a pull request to approve
+- variable `TARGET_BRANCH`: where pieces go (default `main`). Set to `form-test` to try the form on a preview without touching the live site; when switching back to `main`, copy `data/form-imported.json` from the test branch so test answers aren't imported again
 
 Test locally without Google: `python3 tools/import_from_form.py --local rows.json`

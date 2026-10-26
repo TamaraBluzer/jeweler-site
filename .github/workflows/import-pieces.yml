@@ -1,6 +1,8 @@
 # Adds new pieces from Ronen's Google Form to the site.
 # Runs every 15 minutes (and on demand from the Actions tab). Does nothing until the
 # repository variable FORM_SHEET_ID and the secret GOOGLE_SERVICE_ACCOUNT_JSON are set.
+# TARGET_BRANCH (variable, default main) chooses where new pieces go, e.g. "form-test"
+# to try the form without touching the live site.
 name: Import pieces from Google Form
 
 on:
@@ -21,8 +23,12 @@ jobs:
     if: ${{ vars.FORM_SHEET_ID != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      TARGET_BRANCH: ${{ vars.TARGET_BRANCH || 'main' }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ vars.TARGET_BRANCH || 'main' }}
 
       - uses: actions/setup-python@v5
         with:
@@ -54,7 +60,8 @@ jobs:
           added=$(cat /tmp/added-pieces.txt 2>/dev/null || true)
           msg="${added:+Add from form: $added}"
           msg="${msg:-Record form responses}"
-          if [ "$AUTO_PUBLISH" = "true" ] || [ -z "$added" ]; then
+          # A test branch is a sandbox: always commit there directly
+          if [ "$AUTO_PUBLISH" = "true" ] || [ -z "$added" ] || [ "$TARGET_BRANCH" != "main" ]; then
             git add -A && git commit -q -m "$msg" && git push -q
           else
             # The piece waits for approval in a pull request; the "already handled" record goes
