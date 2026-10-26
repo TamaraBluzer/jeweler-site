@@ -32,3 +32,16 @@ Bump the `?v=` number on the CSS/JS links in `index.html` (e.g. `?v=15` → `?v=
 
 ## Earlier dark design
 The previous dark "liquid glass" version lives in `dark/` (served at `/dark/`) for comparison. It has its own copy of the HTML/CSS/JS and its own `pieces.js`, shares the media in `assets/`, and is hidden from search engines.
+
+## Adding pieces from the Google Form
+Ronen adds pieces with a Google Form. `.github/workflows/import-pieces.yml` runs every 15 minutes,
+reads new responses with a Google service account, prepares the media (`tools/import_from_form.py`)
+and publishes them. Already-handled responses are remembered in `data/form-imported.json` (fingerprints only).
+
+Settings (repo → Settings → Secrets and variables → Actions):
+- secret `GOOGLE_SERVICE_ACCOUNT_JSON`: the service account's JSON key
+- variable `FORM_SHEET_ID`: the response spreadsheet's id (the workflow stays off until this is set)
+- variable `ALLOWED_EMAILS`: comma-separated Google accounts allowed to add pieces
+- variable `AUTO_PUBLISH`: `true` (default) publishes straight away; `false` opens a pull request to approve
+
+Test locally without Google: `python3 tools/import_from_form.py --local rows.json`

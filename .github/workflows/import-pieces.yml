@@ -1,0 +1,73 @@
+# Adds new pieces from Ronen's Google Form to the site.
+# Runs every 15 minutes (and on demand from the Actions tab). Does nothing until the
+# repository variable FORM_SHEET_ID and the secret GOOGLE_SERVICE_ACCOUNT_JSON are set.
+name: Import pieces from Google Form
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: import-pieces
+  cancel-in-progress: false
+
+jobs:
+  import:
+    if: ${{ vars.FORM_SHEET_ID != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: tools/requirements.txt
+
+      - name: Install ffmpeg and Python packages
+        run: |
+          command -v ffmpeg >/dev/null || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
+          pip install -q -r tools/requirements.txt
+
+      - name: Import new form responses
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          FORM_SHEET_ID: ${{ vars.FORM_SHEET_ID }}
+          ALLOWED_EMAILS: ${{ vars.ALLOWED_EMAILS }}
+        run: python tools/import_from_form.py
+
+      # AUTO_PUBLISH=false: open a pull request to approve instead of publishing straight away
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          AUTO_PUBLISH: ${{ vars.AUTO_PUBLISH || 'true' }}
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then echo "Nothing new."; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          added=$(cat /tmp/added-pieces.txt 2>/dev/null || true)
+          msg="${added:+Add from form: $added}"
+          msg="${msg:-Record form responses}"
+          if [ "$AUTO_PUBLISH" = "true" ] || [ -z "$added" ]; then
+            git add -A && git commit -q -m "$msg" && git push -q
+          else
+            # The piece waits for approval in a pull request; the "already handled" record goes
+            # to main straight away, so the next run doesn't add the same response again.
+            branch="pieces/$(date -u +%Y%m%d-%H%M)"
+            cp data/form-imported.json /tmp/ledger.json
+            git checkout -q -b "$branch"
+            git checkout -q main -- data/form-imported.json
+            git add -A && git commit -q -m "$msg" && git push -q -u origin "$branch"
+            gh pr create --title "New pieces: $added" \
+              --body "Ronen added new pieces through the form. Merge to publish them on ronenperetz.com." \
+              --base main --head "$branch"
+            git checkout -q main
+            cp /tmp/ledger.json data/form-imported.json
+            git add data/form-imported.json && git commit -q -m "Record form responses (waiting for approval: $added)" && git push -q
+          fi
