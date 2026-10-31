@@ -280,8 +280,8 @@ def main():
         record = {"key": key, "title": title, "at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
 
         if allowed and email not in allowed:
-            log("  skipped: email not allowed")
-            ledger["imported"].append({**record, "status": "rejected: email not allowed"})
+            # Not recorded: if this email is added to ALLOWED_EMAILS later, the answer is picked up then
+            log("  waiting: this email is not on the allowed list (add it to ALLOWED_EMAILS to accept)")
             continue
         category = next((c for c in CATEGORIES if c.lower() in get("category").lower()), None)
         if not title or not category:
