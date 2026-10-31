@@ -35,6 +35,8 @@ const SITE = {
 
 const PIECES = [
   // The order here is the order on the site (and sets each piece's catalogue number)
+  { id: "test-2", title: "tEST 2", category: "Bands", kind: "video",
+    description: "VIDEO" },
   { id: "test", title: "Test", category: "Engagement", kind: "photo",
     description: "description" },
   { id: "oval-eternity", title: "Oval Eternity Band", category: "Bands", kind: "photo", light: true, wide: true,

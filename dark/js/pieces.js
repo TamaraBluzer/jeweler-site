@@ -20,6 +20,15 @@ const SITE = {
 
 const PIECES = [
   {
+    "id": "test-2",
+    "title": "tEST 2",
+    "category": "Bands",
+    "images": [
+      "../assets/media/test-2/poster.jpg"
+    ],
+    "description": "VIDEO"
+  },
+  {
     "id": "test",
     "title": "Test",
     "category": "Engagement",
