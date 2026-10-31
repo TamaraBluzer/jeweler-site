@@ -35,6 +35,8 @@ const SITE = {
 
 const PIECES = [
   // The order here is the order on the site (and sets each piece's catalogue number)
+  { id: "test", title: "Test", category: "Engagement", kind: "photo",
+    description: "description" },
   { id: "oval-eternity", title: "Oval Eternity Band", category: "Bands", kind: "photo", light: true, wide: true,
     description: "Oval diamonds set all the way around, in white gold." },
   { id: "heart-eternity-band", title: "Heart Eternity Band", category: "Bands", kind: "video", light: true,

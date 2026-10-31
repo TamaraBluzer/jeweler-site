@@ -20,6 +20,15 @@ const SITE = {
 
 const PIECES = [
   {
+    "id": "test",
+    "title": "Test",
+    "category": "Engagement",
+    "images": [
+      "../assets/media/test/photo.jpg"
+    ],
+    "description": "description"
+  },
+  {
     "id": "oval-eternity",
     "title": "Oval Eternity Band",
     "category": "Bands",
