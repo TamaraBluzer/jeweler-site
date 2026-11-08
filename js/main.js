@@ -10,6 +10,18 @@
   const no = (p) => `No. ${String(PIECES.indexOf(p) + 1).padStart(2, "0")}`;
   const still = (p) => MEDIA(p.id) + (p.kind === "photo" ? "photo.jpg" : "poster.jpg");
 
+  // Runs fn once the page (fonts, first photos) has finished loading
+  const afterPageLoad = (fn) => {
+    if (document.readyState === "complete") fn();
+    else addEventListener("load", fn, { once: true });
+  };
+
+  // Fade a picture in once it's downloaded and decoded, instead of popping in half-drawn
+  const reveal = (img) => {
+    const show = () => img.classList.add("ready");
+    img.decode().then(show, () => { if (img.complete) show(); else img.addEventListener("load", show, { once: true }); });
+  };
+
   // ── 3D spinner ───────────────────────────────────────────
   // Plays the frames of one full turn on a canvas. Turns slowly by itself, can be
   // grabbed and spun with momentum (velocity carries over when you let go), and
@@ -21,6 +33,7 @@
       this.base = MEDIA(piece.id) + "spin/";
       this.onTap = onTap;
       this.images = [];
+      this.ready = []; // frames that are downloaded AND decoded, so drawing them never stalls scrolling
       this.startFrame = (piece.start || 1) - 1; // frame to open on
       this.angle = (this.startFrame + 0.5) / this.count; // in turns, 0..1 (centred on the start frame)
       this.velocity = 0; // turns per second
@@ -57,15 +70,26 @@
     load() {
       if (this.images.length) return;
       this.images = new Array(this.count);
-      // Start frame first, so the piece opens on it; the rest follow in turning order
-      for (let k = 0; k < this.count; k++) {
-        const i = (this.startFrame + k) % this.count;
-        const img = new Image();
-        img.decoding = "async";
-        img.src = `${this.base}${String(i + 1).padStart(2, "0")}.jpg`;
-        if (k === 0) img.onload = () => { this.fit(); this.idleSince = performance.now(); };
-        this.images[i] = img;
-      }
+      this.ready = new Array(this.count).fill(false);
+      // Start frame first, so the piece opens on it. The other frames wait until the page
+      // has finished loading, so they don't hold up the photos of the work further down.
+      this.loadFrame(this.startFrame, "high").then(() => {
+        this.fit();
+        this.idleSince = performance.now();
+        afterPageLoad(() => {
+          for (let k = 1; k < this.count; k++) this.loadFrame((this.startFrame + k) % this.count, "low");
+        });
+      });
+    }
+
+    loadFrame(i, priority) {
+      const img = new Image();
+      img.decoding = "async";
+      img.fetchPriority = priority;
+      img.src = `${this.base}${String(i + 1).padStart(2, "0")}.jpg`;
+      this.images[i] = img;
+      // decode() unpacks the JPEG off the main thread; drawing an undecoded image would do it mid-scroll
+      return img.decode().then(() => { this.ready[i] = true; }, () => {});
     }
 
     fit() {
@@ -76,6 +100,7 @@
       this.canvas.width = Math.round(w * dpr);
       this.canvas.height = Math.round(h * dpr);
       this.canvas.style.height = h + "px";
+      this.drawn = null; // resizing clears the canvas
       this.draw();
     }
 
@@ -83,15 +108,20 @@
     frame() {
       const target = Math.floor((((this.angle % 1) + 1) % 1) * this.count) % this.count;
       for (let d = 0; d < this.count; d++) {
-        const img = this.images[(target + d) % this.count];
-        if (img?.complete && img.naturalWidth) return img;
+        const i = (target + d) % this.count;
+        if (this.ready[i]) return this.images[i];
       }
       return null;
     }
 
+    // Repaint only when the frame changes: the slow turn moves a frame a few times a second,
+    // so most animation ticks have nothing new to draw
     draw() {
       const img = this.frame();
-      if (img) this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+      if (!img || img === this.drawn) return;
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+      this.drawn = img;
     }
 
     start() {
@@ -171,23 +201,32 @@
   }
 
   // ── Looping videos: load when near, play only while visible ─
+  // Starts buffering about a screen ahead, so a clip is ready to play by the time you reach it
+  const load = (v) => {
+    if (v.src) return;
+    v.preload = "auto";
+    v.src = v.dataset.src;
+  };
   const nearby = new IntersectionObserver(
     (entries) => entries.forEach((e) => {
-      if (e.isIntersecting && !e.target.src && !calm()) e.target.src = e.target.dataset.src;
+      if (e.isIntersecting && !calm()) load(e.target);
     }),
-    { rootMargin: "300px" }
+    { rootMargin: "600px 0px" }
   );
   const onScreen = new IntersectionObserver(
     (entries) => entries.forEach((e) => {
       const v = e.target;
       if (e.isIntersecting && !calm()) {
-        if (!v.src) v.src = v.dataset.src; // a fast jump can reach it before the preload observer does
+        load(v); // a fast jump can reach it before the preload observer does
         v.play().catch(() => {});
       } else v.pause();
     }),
     { threshold: 0.35 }
   );
   const watchVideo = (v) => { nearby.observe(v); onScreen.observe(v); };
+  // In the grid the still photo shows first; the clip fades in over it only once frames are moving,
+  // so there's never a black flash or a frozen half-loaded frame
+  const crossfade = (v) => v.addEventListener("playing", () => v.parentElement.classList.add("live"), { once: true });
 
   // ── Site text from pieces.js ─────────────────────────────
   document.querySelectorAll("[data-site]").forEach((el) => {
@@ -267,10 +306,13 @@
 
   // ── Grid ─────────────────────────────────────────────────
   const grid = $("#grid");
-  const mediaTag = (p) =>
-    p.kind === "video"
-      ? `<video muted playsinline loop preload="none" poster="${still(p)}" data-src="${MEDIA(p.id)}video.mp4" aria-label="${p.title}"></video>`
-      : `<img src="${still(p)}" alt="${p.title}" loading="lazy" onerror="this.classList.add('missing')" />`;
+  // Every card has its still photo (small files, fetched up front so they're there when you scroll);
+  // video pieces add the clip on top of it
+  const mediaTag = (p, i) =>
+    `<img src="${still(p)}" alt="${p.kind === "video" ? "" : p.title}" decoding="async" fetchpriority="${i < 4 ? "auto" : "low"}" onerror="this.classList.add('missing')" />` +
+    (p.kind === "video"
+      ? `<video muted playsinline loop preload="none" disablepictureinpicture data-src="${MEDIA(p.id)}video.mp4" aria-label="${p.title}"></video>`
+      : "");
 
   function renderGrid() {
     grid.querySelectorAll("video").forEach((v) => { nearby.unobserve(v); onScreen.unobserve(v); });
@@ -280,7 +322,7 @@
       .map(
         (p, i) => `
         <button class="card${p.wide ? " wide" : ""}" data-id="${p.id}" title="${p.title}" style="--i:${i}">
-          <div class="card-media${p.light ? " light" : ""}">${mediaTag(p)}</div>
+          <div class="card-media${p.light ? " light" : ""}">${mediaTag(p, i)}</div>
           <div class="card-label">
             <span class="card-title">${p.title}</span>
             <span class="card-meta">${no(p)}${p.spin ? " · 3D" : ""}</span>
@@ -288,7 +330,8 @@
         </button>`
       )
       .join("");
-    grid.querySelectorAll("video").forEach(watchVideo);
+    grid.querySelectorAll("img").forEach(reveal);
+    grid.querySelectorAll("video").forEach((v) => { crossfade(v); watchVideo(v); });
   }
   grid.addEventListener("click", (e) => {
     const card = e.target.closest(".card");
