@@ -196,12 +196,12 @@ figcaption b, .card-meta, .spin-hint { font: 500 10.5px/1.4 var(--sans); letter-
 .card.wide .card-media { aspect-ratio: 2.12; }
 .card-media img, .card-media video { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 300ms var(--ease-out); }
 .card-media img.missing { visibility: hidden; } /* broken photo: keep the paper frame, hide the broken-image icon */
-/* Smooth loading: the still fades in once decoded; a clip sits on top of it and fades in once it's playing */
+/* Smooth loading: the still fades in once decoded. A clip sits on top, never hidden (iPhones won't play a
+   hidden video); it's see-through until it has a frame, then the still steps aside */
 .card-media img { opacity: 0; transition: opacity 450ms var(--ease-out), transform 300ms var(--ease-out); }
 .card-media img.ready { opacity: 1; }
-.card-media video { position: absolute; inset: 0; opacity: 0; transition: opacity 450ms var(--ease-out), transform 300ms var(--ease-out); }
-.card-media.live video { opacity: 1; }
-.card-media.live img { opacity: 0; } /* light pieces multiply into the paper: don't stack the still under the clip */
+.card-media video { position: absolute; inset: 0; }
+.card-media.live img { visibility: hidden; } /* light pieces multiply into the paper: don't stack the still under the clip */
 @media (hover: hover) and (pointer: fine) {
   .card:hover .card-media img, .card:hover .card-media video { transform: scale(1.03); }
 }

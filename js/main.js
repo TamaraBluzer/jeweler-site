@@ -224,9 +224,13 @@
     { threshold: 0.35 }
   );
   const watchVideo = (v) => { nearby.observe(v); onScreen.observe(v); };
-  // In the grid the still photo shows first; the clip fades in over it only once frames are moving,
-  // so there's never a black flash or a frozen half-loaded frame
-  const crossfade = (v) => v.addEventListener("playing", () => v.parentElement.classList.add("live"), { once: true });
+  // In the grid the still photo shows first. The clip sits on top of it, always visible (iPhones won't
+  // start a hidden video) but see-through until it has a frame; then the still steps aside
+  const crossfade = (v) => {
+    const live = () => v.parentElement?.classList.add("live");
+    v.addEventListener("loadeddata", live, { once: true });
+    v.addEventListener("playing", live, { once: true });
+  };
 
   // ── Site text from pieces.js ─────────────────────────────
   document.querySelectorAll("[data-site]").forEach((el) => {
